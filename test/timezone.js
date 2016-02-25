@@ -12,33 +12,66 @@ test('It works on DST start', function(t) {
     t.ok(interval, 'Interval parsed');
 
     var date = interval.next();
+    console.log('test:' + date.toString());
     t.equal(date.getHours(), 4, 'Due to DST start in Athens, 3 is skipped');
-  } catch (err) {
-    t.ifError(err, 'Interval parse error');
-  }
+  
+    date = interval.next();
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 5, '5 AM on the 27th');
 
-  t.end();
-});
-
-test('It works on DST end', function(t) {
-  try {
-    var options = {
-      currentDate: '2016-10-30 02:00:01',
-      tz: 'Europe/Athens'
-    };
-
-    var interval = CronExpression.parse('0 * * * *', options);
+    var interval = CronExpression.parse('0 3 * * *', options);
     t.ok(interval, 'Interval parsed');
 
     var date = interval.next();
-    t.equal(date.getHours(), 3, '3 AM');
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 4, 'Due to DST start in Athens, 3 is skipped');
     date = interval.next();
-    t.equal(date.getHours(), 3, 'Due to DST end in Athens (4-->3)');
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 3, '3 on the 28th');
+
+    var interval = CronExpression.parse('*/20 3 * * *', options);
+    t.ok(interval, 'Interval parsed');
+
+    var date = interval.next();
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 4, 'Due to DST start in Athens, 3 is skipped');
     date = interval.next();
-    t.equal(date.getHours(), 4, '4 AM');
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 4, '4:20');
+    date = interval.next();
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 4, '4:40');
+    date = interval.next();
+    console.log('test:' + date.toString());
+    t.equal(date.getHours(), 3, '3:00 on the 28th');
+    
+
   } catch (err) {
     t.ifError(err, 'Interval parse error');
   }
 
   t.end();
 });
+
+// test('It works on DST end', function(t) {
+//   try {
+//     var options = {
+//       currentDate: '2016-10-30 02:00:01',
+//       tz: 'Europe/Athens'
+//     };
+
+//     var interval = CronExpression.parse('0 * * * *', options);
+//     t.ok(interval, 'Interval parsed');
+
+//     var date = interval.next();
+//     t.equal(date.getHours(), 3, '3 AM');
+//     date = interval.next();
+//     t.equal(date.getHours(), 3, 'Due to DST end in Athens (4-->3)');
+//     date = interval.next();
+//     t.equal(date.getHours(), 4, '4 AM');
+//   } catch (err) {
+//     t.ifError(err, 'Interval parse error');
+//   }
+
+//   t.end();
+// });
